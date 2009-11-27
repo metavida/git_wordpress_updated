@@ -1,2 +1,5 @@
 wordpress_*
+!wordpress_tars
+wordpress_tars/*
+!wordpress_tars/wordpress-2.8.6.tar.gz
 .DS_Store

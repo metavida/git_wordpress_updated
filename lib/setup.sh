@@ -36,6 +36,8 @@ fi
 
 echo "Setting up git_wordpress_updated..."
 
+../lib/wp_untar.sh $LATEST_WP_TAR $WP_MY_DIR
+
 tar xzvf $LATEST_WP_TAR -C $WP_TAR_DIR
 if [ "$?" -ne "0" ]; then
 	echo "Error untaring "`basename $LATEST_WP_TAR`
@@ -58,11 +60,11 @@ if [ "$?" -eq "0" ]; then
 fi
 
 git init
-git add *
-git commit -m "Wordpress $LATEST_WP_NUM"
+git add .
+git commit -m "WordPress $LATEST_WP_NUM"
 
 if [ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]; then
-	echo "There was an error committing Wordpress to git."
+	echo "There was an error committing WordPress to git."
 	exit 1
 fi
 
@@ -70,7 +72,7 @@ git branch mine
 git checkout mine
 
 echo ""
-echo "Your wordpress installation is ready for modification."
+echo "Your WordPress installation is ready for modification."
 echo "Make whatever changes you want in the wordpress_my_install directory."
 echo ""
 echo "When a new version of WordPress is released, download the tar.gz file into the wordpress_tars directory and run upgrade.sh."

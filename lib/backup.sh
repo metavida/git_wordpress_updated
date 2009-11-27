@@ -42,7 +42,7 @@ cd $BACKUP_DIR
 git status
 if [ "$?" -ne "0" ]; then
 	git init
-	git add *
+	git add .
 	git commit -m "Initial Commit"
 fi
 
@@ -62,7 +62,7 @@ fi
 
 if [ `git diff | wc -l` -eq 0 ]; then
 	# If there have been any changes to the DB, back them up
-	git add *
+	git add .
 	git commit -m "Backed up on $(date)"
 	git gc --quiet
 fi
