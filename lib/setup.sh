@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ALREADY_SETUP=0
+
 WP_MY_DIR=`pwd`"/wordpress_my_install"
 WP_TAR_DIR=`pwd`"/wordpress_tars"
 
@@ -16,21 +18,23 @@ fi
 
 cd $WP_TAR_DIR
 LATEST_WP_TAR=`find . -name wordpress-\*.tar.gz | tail -n 1`
-LATEST_WP_NUM=${LATEST_WP_TAR//wordpress-/}
-LATEST_WP_NUM=${LATEST_WP_NUM//.tar.gz/}
+LATEST_WP_TAR=$WP_TAR_DIR/$LATEST_WP_TAR
+LATEST_WP_NUM=`../lib/wp_version_num.sh "$LATEST_WP_TAR"`
 
 if [ -d $WP_MY_DIR ]; then
-	git status
-	if [ "$?" -ne "0" ]; then
+	cd $WP_MY_DIR
+	ALREADY_SETUP=`git branch | grep 'mine' | wc -l`
+	if [ $ALREADY_SETUP -eq 1 ]; then
+		exit 0
+	else
 		echo "Something's not right. Please delete the wordpress_my_install directory and try running upgrade.sh again."
 		exit 1
 	fi
-	exit 0
 else
 	mkdir $WP_MY_DIR
 fi
 
-LATEST_WP_TAR=$WP_TAR_DIR/$LATEST_WP_TAR
+echo "Setting up git_wordpress_updated..."
 
 tar xzvf $LATEST_WP_TAR -C $WP_TAR_DIR
 if [ "$?" -ne "0" ]; then
@@ -65,7 +69,11 @@ fi
 git branch mine
 git checkout mine
 
+echo ""
 echo "Your wordpress installation is ready for modification."
 echo "Make whatever changes you want in the wordpress_my_install directory."
-
+echo ""
+echo "When a new version of WordPress is released, download the tar.gz file into the wordpress_tars directory and run upgrade.sh."
+echo ""
+exit 2
 

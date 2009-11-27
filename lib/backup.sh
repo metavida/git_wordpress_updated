@@ -46,7 +46,7 @@ if [ "$?" -ne "0" ]; then
 	git commit -m "Initial Commit"
 fi
 
-echo "backing up the database... "
+echo "Backing up the database... "
 # Deleting the old backup
 if [ -f $BACKUP_FILE ]; then
 	rm $BACKUP_FILE

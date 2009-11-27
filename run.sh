@@ -11,17 +11,31 @@ DB_USER=wp_user
 DB_PASS=wp_pass
 DB_HOST=localhost
 
-echo "begin setup"
+#echo "begin setup"
 ./lib/setup.sh
-if [ "$?" -ne "0" ]; then
+SETUP_STATUS=$?
+if [ "$SETUP_STATUS" -eq "1" ]; then
+	echo ""
 	echo "Error setting up git_wordpress_updated."
+	exit 1
+elif [ "$SETUP_STATUS" -eq "2" ]; then
+	# This was the first time this has been set up.
+	exit 0
+fi
+
+#echo "begin database backup"
+./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
+if [ "$?" -ne "0" ]; then
+	echo ""
+	echo "Error backing up your WordPress Database."
 	exit 1
 fi
 
-echo "begin backup"
-./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
+#echo "begin wordpress update"
+./lib/upgrade.sh
 if [ "$?" -ne "0" ]; then
-	echo "Error backing up your wordpress DB."
+	echo ""
+	echo "Error upgrading to the newest version of WordPress."
 	exit 1
 fi
 
