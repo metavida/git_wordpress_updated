@@ -13,11 +13,17 @@ DB_HOST=localhost
 
 echo "begin setup"
 ./lib/setup.sh
+if [ "$?" -ne "0" ]; then
+	echo "Error setting up git_wordpress_updated."
+	exit 1
+fi
 
 echo "begin backup"
-echo `pwd`
 ./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
-echo `pwd`
+if [ "$?" -ne "0" ]; then
+	echo "Error backing up your wordpress DB."
+	exit 1
+fi
 
 #
 #WP_CLEAN_DIR=~/wordpress

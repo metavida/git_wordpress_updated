@@ -37,9 +37,8 @@ else
 	mkdir $BACKUP_DIR
 fi
 
-echo `pwd`
 cd $BACKUP_DIR
-echo `pwd`
+
 git status
 if [ "$?" -ne "0" ]; then
 	git init
@@ -47,20 +46,25 @@ if [ "$?" -ne "0" ]; then
 	git commit -m "Initial Commit"
 fi
 
-echo -n "backing up the database... "
+echo "backing up the database... "
 # Deleting the old backup
 if [ -f $BACKUP_FILE ]; then
 	rm $BACKUP_FILE
 fi
 
 # Dumping the new backup
-mysqldump --user=${DB_USER} --password=${DB_PASS} --host=${DB_HOST} ${DB_NAME} > $BACKUP_FILE
+mysqldump --user=${DB_USER} --password=${DB_PASS} --host=${DB_HOST} ${DB_NAME} --skip-dump-date > $BACKUP_FILE
 if [ "$?" -ne "0" ]; then
 	echo -e "\nmysqldump failed!"
-	git revert
+	git checkout .
 	exit 1
 fi
 
-# Committing the new backup
-git add *
-git commit -m "Backed up on $(date +%Y%m%d)"
+if [ `git diff | wc -l` -eq 0 ]; then
+	# If there have been any changes to the DB, back them up
+	git add *
+	git commit -m "Backed up on $(date)"
+	git gc --quiet
+fi
+
+echo "database backup complete"
