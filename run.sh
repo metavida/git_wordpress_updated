@@ -11,6 +11,8 @@ DB_USER=wp_user
 DB_PASS=wp_pass
 DB_HOST=localhost
 
+LIVE_WORDPRESS_DIR="/full_path_to_your/apache/wordpress_blog"
+
 #echo "begin setup"
 ./lib/setup.sh
 SETUP_STATUS=$?
@@ -39,19 +41,10 @@ if [ "$?" -ne "0" ]; then
 	exit 1
 fi
 
-#
-#WP_CLEAN_DIR=~/wordpress
-#WP_CLEAN_DIR
-#
-##no trailing slash
-#BLOG_DIR=/home/guyru/guyrutenberg.com
-#BACKUP_DIR=/home/guyru/backups
-#
-#echo -n "dumping database... "
-#mysqldump --user=${DB_USER} --password=${DB_PASS} --host=${DB_HOST} ${DB_NAME} \
-# | bzip2 -c > ${BACKUP_DIR}/${DB_NAME}-$(date +%Y%m%d).sql.bz2
+#echo "deploy wordpress"
+#./deploy.sh $LIVE_WORDPRESS_DIR
 #if [ "$?" -ne "0" ]; then
-#	echo -e "\nmysqldump failed!"
+#	echo ""
+#	echo "Error deploying WordPress."
 #	exit 1
 #fi
-#echo "done"
