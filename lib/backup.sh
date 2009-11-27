@@ -27,14 +27,40 @@ then
 fi
 
 DB_NAME=$1
-BACKUP_DIR=$2
 
-#no trailing slash
+BACKUP_DIR=`pwd`"/wordpress_db_backup"
+BACKUP_FILE=$BACKUP_DIR/$DB_NAME.sql
 
-echo -n "dumping database... "
-mysqldump --user=${DB_USER} --password=${DB_PASS} --host=${DB_HOST} ${DB_NAME} ${BACKUP_DIR}/${DB_NAME}-$(date +%Y%m%d).sql.bz2
+if [ -d $BACKUP_DIR ]; then
+	touch $BACKUP_DIR
+else
+	mkdir $BACKUP_DIR
+fi
+
+echo `pwd`
+cd $BACKUP_DIR
+echo `pwd`
+git status
+if [ "$?" -ne "0" ]; then
+	git init
+	git add *
+	git commit -m "Initial Commit"
+fi
+
+echo -n "backing up the database... "
+# Deleting the old backup
+if [ -f $BACKUP_FILE ]; then
+	rm $BACKUP_FILE
+fi
+
+# Dumping the new backup
+mysqldump --user=${DB_USER} --password=${DB_PASS} --host=${DB_HOST} ${DB_NAME} > $BACKUP_FILE
 if [ "$?" -ne "0" ]; then
 	echo -e "\nmysqldump failed!"
+	git revert
 	exit 1
 fi
-echo "done"
+
+# Committing the new backup
+git add *
+git commit -m "Backed up on $(date +%Y%m%d)"

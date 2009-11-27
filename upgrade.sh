@@ -6,14 +6,19 @@
 # (C) 2008 Guy Rutenberg - http://www.guyrutenberg.com
 # This is a script that creates backups of blogs.
 
+DB_NAME=wp_db
+DB_USER=wp_user
+DB_PASS=wp_pass
+DB_HOST=localhost
+
+echo "begin setup"
 ./lib/setup.sh
 
-echo "continue"
+echo "begin backup"
+echo `pwd`
+./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
+echo `pwd`
 
-#DB_NAME=guy_blog
-#DB_USER=guy_root
-#DB_PASS=****
-#DB_HOST=localhost
 #
 #WP_CLEAN_DIR=~/wordpress
 #WP_CLEAN_DIR
