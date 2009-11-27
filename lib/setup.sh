@@ -15,7 +15,9 @@ else
 fi
 
 cd $WP_TAR_DIR
-LATEST_WP_TAR=`find . -name wordpress\*.tar.gz | tail -n 1`
+LATEST_WP_TAR=`find . -name wordpress-\*.tar.gz | tail -n 1`
+LATEST_WP_NUM=${LATEST_WP_TAR//wordpress-/}
+LATEST_WP_NUM=${LATEST_WP_NUM//.tar.gz/}
 
 if [ -d $WP_MY_DIR ]; then
 	git status
@@ -53,10 +55,17 @@ fi
 
 git init
 git add *
-git commit -m "Initial Commit"
+git commit -m "Wordpress $LATEST_WP_NUM"
 
 if [ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]; then
-	exit 0
-else
-	
+	echo "There was an error committing Wordpress to git."
+	exit 1
 fi
+
+git branch mine
+git checkout mine
+
+echo "Your wordpress installation is ready for modification."
+echo "Make whatever changes you want in the wordpress_my_install directory."
+
+
