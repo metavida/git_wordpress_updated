@@ -6,10 +6,10 @@
 # (C) 2008 Guy Rutenberg - http://www.guyrutenberg.com
 # This is a script that creates backups of blogs.
 
-DB_NAME=wp_db
-DB_USER=wp_user
-DB_PASS=wp_pass
-DB_HOST=localhost
+DB_NAME="wp_db"
+DB_USER="wp_user"
+DB_PASS="wp_pass"
+DB_HOST="localhost"
 
 LIVE_WORDPRESS_DIR="/full_path_to_your/apache/wordpress_blog"
 
@@ -26,12 +26,12 @@ elif [ "$SETUP_STATUS" -eq "2" ]; then
 fi
 
 #echo "begin database backup"
-./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
-if [ "$?" -ne "0" ]; then
-	echo ""
-	echo "Error backing up your WordPress Database."
-	exit 1
-fi
+#./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
+#if [ "$?" -ne "0" ]; then
+#	echo ""
+#	echo "Error backing up your WordPress Database."
+#	exit 1
+#fi
 
 #echo "begin wordpress update"
 ./lib/upgrade.sh

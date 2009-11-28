@@ -11,7 +11,9 @@ if [ "$?" -ne "0" ]; then
 fi
 
 if [ -d $WP_TAR_DIR/wordpress ]; then
-	cp -R $WP_TAR_DIR/wordpress/ $WP_MY_DIR/
+	find $WP_MY_DIR -d 1 ! -name '.git*' -exec rm -rf {} \;
+	mv $WP_TAR_DIR/wordpress/* $WP_MY_DIR
+	rm -rf $WP_TAR_DIR/wordpress
 else
 	echo "Error untaring "`basename $LATEST_WP_TAR`" wordpress dir not found."
 	exit 1
