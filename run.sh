@@ -6,14 +6,28 @@
 # (C) 2008 Guy Rutenberg - http://www.guyrutenberg.com
 # This is a script that creates backups of blogs.
 
-DB_NAME="wp_db"
-DB_USER="wp_user"
-DB_PASS="wp_pass"
-DB_HOST="localhost"
+config_file="config-sample.txt"
+#tot=`wc -l $config_file`
+#i=1
+while read line; do
+  name=`echo $line | sed "s/ *=.*//"`
+  val=`echo $line | sed "s/[^=]*= *//"`
+  
+  case $name in
+    DB_NAME           ) DB_NAME=$val;;
+    DB_USER           ) DB_USER=$val;;
+    DB_PASS           ) DB_PASS=$val;;
+    DB_HOST           ) DB_HOST=$val;;
+    LIVE_WORDPRESS_DIR) LIVE_WORDPRESS_DIR=$val;;
+    #* ) echo "Unimplemented option chosen.";;
+  esac
+done < $config_file
 
-LIVE_WORDPRESS_DIR="/full_path_to_your/apache/wordpress_blog"
+if [[ -n $LIVE_WORDPRESS_DIR ]]; then
+  LIVE_WORDPRESS_DIR=`pwd`"/wordpress_live"
+fi
 
-#echo "begin setup"
+echo "begin setup"
 ./lib/setup.sh
 SETUP_STATUS=$?
 if [ "$SETUP_STATUS" -eq "1" ]; then
@@ -26,12 +40,16 @@ elif [ "$SETUP_STATUS" -eq "2" ]; then
 fi
 
 #echo "begin database backup"
-#./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
-#if [ "$?" -ne "0" ]; then
-#	echo ""
-#	echo "Error backing up your WordPress Database."
-#	exit 1
-#fi
+if [ -n $DB_NAME ]; then
+  ./lib/backup.sh -u $DB_USER -p $DB_PASS -h $DB_HOST $DB_NAME
+  if [ "$?" -ne "0" ]; then
+  	echo ""
+  	echo "Error backing up your WordPress Database."
+  	exit 1
+  fi
+else
+  echo "If you want your WordPress DB to be backed up please set up config.txt correctly."
+fi
 
 #echo "begin wordpress update"
 ./lib/upgrade.sh
