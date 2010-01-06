@@ -2,5 +2,5 @@ config.txt
 wordpress_*
 !wordpress_tars
 wordpress_tars/*
-!wordpress_tars/wordpress-2.8.6.tar.gz
+!wordpress_tars/wordpress-2.9.1.tar.gz
 .DS_Store
