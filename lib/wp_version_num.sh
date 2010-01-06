@@ -2,7 +2,7 @@
 
 LATEST_WP_TAR=$1
 
-if [ -f $LATEST_WP_TAR ]; then
+if [[ -f $LATEST_WP_TAR ]]; then
 	#echo $LATEST_WP_TAR
 	LATEST_WP_NUM=`basename "$LATEST_WP_TAR"`
 	#echo $LATEST_WP_NUM

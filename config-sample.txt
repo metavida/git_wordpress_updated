@@ -7,4 +7,4 @@ DB_HOST=localhost
 
 # Enter the full path to the directory where your live WordPress install
 # should end up. By default this will be ./wordpress_live
-# LIVE_WORDPRESS_DIR=/full_path_to_your/apache/wordpress_blog
+# LIVE_WORDPRESS_DIR=/full_path/to_your/wordpress_blog
